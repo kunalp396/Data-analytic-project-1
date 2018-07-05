@@ -1,0 +1,120 @@
+
+
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import org.apache.hadoop.io.Writable;
+import org.apache.hadoop.mapreduce.lib.db.DBWritable;
+
+public class DBInputWritable implements Writable, DBWritable
+{
+   private String Season;
+   private String MatchDate;
+   private String Team1;
+   private String Team2;
+   private String TossWinner;
+   private String TossDecesion;
+   private String Winner;
+   private String WinByRuns;
+   private String WinByWickets;
+   private String PlayerOfTheMatch;
+   private String Venue;
+   
+   public void readFields(DataInput in) throws IOException {   }
+
+   public void readFields(ResultSet rs) throws SQLException
+   //Resultset object represents the data returned from a SQL statement
+   {
+	   Season =     rs.getString(1);
+	   MatchDate =  rs.getString(2);
+	   Team1 =      rs.getString(3);
+	   Team2 =      rs.getString(4);
+	   TossWinner = rs.getString(5);
+	   TossDecesion = rs.getString(6);
+	   Winner =       rs.getString(7);
+	   WinByRuns =    rs.getString(8);
+	   WinByWickets = rs.getString(9);
+	   PlayerOfTheMatch =   rs.getString(10);
+	   Venue =              rs.getString(11);
+	   
+   }
+
+   public void write(DataOutput out) throws IOException {  }
+
+   public void write(PreparedStatement ps) throws SQLException
+   {
+	 ps.setString(1, Season);
+     ps.setString(2, MatchDate);
+     ps.setString(3, Team1);
+     ps.setString(4, Team2);
+     ps.setString(5, TossWinner);
+     ps.setString(6, TossDecesion);
+     ps.setString(7, Winner);
+     ps.setString(8, WinByRuns);
+     ps.setString(9, WinByWickets);
+     ps.setString(10, PlayerOfTheMatch);
+     ps.setString(11, Venue);
+          
+   }
+
+   public String getSeason()
+   {
+     return Season;
+   }
+
+   public String getMatchDate()
+   {
+     return MatchDate;
+   }
+   
+   public String getTeam1()
+   {
+     return Team1;
+   }
+   
+   public String getTeam2()
+   {
+     return Team2;
+   }
+
+   public String getTossWinner()
+   {
+     return TossWinner;
+   }
+   
+   public String getTossDecesion()
+   {
+     return TossDecesion;
+   }
+
+   public String getWinner()
+   {
+     return Winner;
+   }
+   public String getWinByRuns()
+   {
+     return WinByRuns;
+   }
+
+   public String getWinByWickets()
+   {
+     return WinByWickets;
+   }
+   
+   public String getPlayerOfTheMatch()
+   {
+     return PlayerOfTheMatch;
+   }
+
+   public String getVenue()
+   {
+     return Venue;
+   }
+   
+   
+   
+   
+}

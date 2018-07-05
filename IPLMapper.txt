@@ -1,0 +1,61 @@
+
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.GenericOptionsParser;
+
+
+public class IplMapper extends Mapper<LongWritable, DBInputWritable , Text, Text>{
+	private Text keyOutput ; 	
+	
+	
+	public void map(LongWritable key, DBInputWritable value, Context context)throws IOException, InterruptedException{
+		
+		String Season = value.getSeason() ;
+		String MatchDate = value.getMatchDate() ;
+		String Team1 = value.getTeam1() ;
+		String Team2 = value.getTeam2() ;
+		String TossWinner = value.getTossWinner() ;
+		String TossDecesion = value.getTossDecesion() ;
+		String Winner = value.getWinner() ;
+		String WinByRuns = value.getWinByRuns() ;
+		String Wickets = value.getWinByWickets() ;
+		String PlayerOfTheMatch = value.getPlayerOfTheMatch() ;
+		String Venue = value.getVenue() ;
+			
+		
+		
+		
+		
+		if(Team1.contains("Mumbai Indians") || Team2.contains("Mumbai Indians"))
+		
+		{
+			String sConcatenate = Season+ "," +MatchDate+ "," + Team1+ "," + Team2+ "," + TossWinner+ "," + TossDecesion+ "," + Winner+ "," + WinByRuns+ "," + Wickets+ "," + PlayerOfTheMatch+ "," + Venue;
+		
+			    keyOutput = new Text (sConcatenate);
+			
+				context.write(keyOutput, new Text(""));
+			
+			
+		}
+	}
+}

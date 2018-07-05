@@ -1,0 +1,95 @@
+
+
+import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.fs.Path;
+import org.apache.hadoop.io.*;
+import org.apache.hadoop.mapreduce.Job;
+import org.apache.hadoop.mapreduce.Mapper;
+import org.apache.hadoop.mapreduce.Reducer;
+import org.apache.hadoop.mapreduce.Mapper.Context;
+import org.apache.hadoop.mapreduce.lib.input.FileInputFormat;
+import org.apache.hadoop.mapreduce.lib.input.MultipleInputs;
+import org.apache.hadoop.mapreduce.lib.input.TextInputFormat;
+import org.apache.hadoop.mapreduce.lib.output.FileOutputFormat;
+import org.apache.hadoop.util.GenericOptionsParser;
+
+
+
+import org.apache.hadoop.mapreduce.lib.db.DBConfiguration;
+import org.apache.hadoop.mapreduce.lib.db.DBInputFormat;
+import org.apache.hadoop.mapreduce.lib.db.DBOutputFormat;
+import org.apache.hadoop.io.Text;
+import org.apache.hadoop.io.IntWritable;
+import org.apache.hadoop.io.NullWritable;
+
+
+
+
+
+
+public class IplDriver {
+
+      public static void main(String[] args) throws Exception {
+		
+					
+    	  Configuration conf = new Configuration();
+    	
+  		String[] otherArgs = new GenericOptionsParser(conf, args).getRemainingArgs();
+  		
+  	
+    	 
+					     DBConfiguration.configureDB(conf,
+					     "com.mysql.jdbc.Driver",   
+					     "jdbc:mysql://localhost:3306/IPL", 
+					     "root",    
+					     "Hadoop2015"); 
+										
+					
+					Job job = new Job(conf, "IPLmatchesBusinessAnalysis");
+					job.setJarByClass(IplDriver.class);
+					job.setMapperClass(IplMapper.class);
+					job.setReducerClass(IplReducer.class);
+						
+					
+					job.setMapOutputKeyClass(Text.class);
+					job.setMapOutputValueClass(Text.class);
+					
+					
+					job.setOutputKeyClass(Text.class);
+					
+					
+					job.setOutputValueClass(Text.class);
+					
+					
+			
+				    job.setInputFormatClass(DBInputFormat.class);
+			
+					
+					
+					
+					
+					
+					
+					
+				    DBInputFormat.setInput(
+				    	     job,
+				    	     DBInputWritable.class,
+				    	     "IPL",   
+				    	     null,
+				    	     null,
+				    	     new String[] { "Season", "MatchDate" , "Team1", "Team2", "TossWinner" , "TossDecesion", "Winner", "WinByRuns" , "WinByWickets", "PlayerOfTheMatch", "Venue" }  // table columns
+				    	     );
+
+
+					
+					
+	
+					FileOutputFormat.setOutputPath(job, new Path("/home/hduser/Output/output"));
+					
+				
+					System.exit(job.waitForCompletion(true) ? 0 : 1);
+					
+					
+				}
+}
+
